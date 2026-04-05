@@ -1,1 +1,11 @@
+{
+  "domain": "victron_register_reader",
+  "name": "Victron Register Reader",
+  "version": "1.0.0",
+  "documentation": "https://github.com/PPolo11/esphome-victron-register-reader",
+  "requirements": [],
+  "dependencies": [],
+  "codeowners": ["@PPolo11"],
+  "esp_home_version": ">=2026.3.0"
+}
 
