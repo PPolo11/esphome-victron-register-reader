@@ -8,20 +8,24 @@ VictronRegisterReader = victron_ns.class_("VictronRegisterReader", cg.PollingCom
 
 CONF_REGISTER = "register"
 
-CONFIG_SCHEMA = sensor.sensor_schema().extend({
-    cv.GenerateID(): cv.declare_id(VictronRegisterReader),
-    cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
-    cv.Required(CONF_REGISTER): cv.hex_uint16_t,
-    cv.Optional(CONF_UPDATE_INTERVAL, default="60s"): cv.update_interval,
-})
+CONFIG_SCHEMA = sensor.sensor_schema().extend(
+    {
+        cv.GenerateID(): cv.declare_id(VictronRegisterReader),
+        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
+        cv.Required(CONF_REGISTER): cv.hex_uint16_t,
+        cv.Optional(CONF_UPDATE_INTERVAL, default="60s"): cv.update_interval,
+    }
+)
 
 async def to_code(config):
+    mac_str = config[CONF_MAC_ADDRESS].as_string()
     var = cg.new_Pvariable(
         config[CONF_ID],
-        config[CONF_MAC_ADDRESS],
+        mac_str,
         config[CONF_REGISTER],
         config[CONF_UPDATE_INTERVAL]
     )
+
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
 
