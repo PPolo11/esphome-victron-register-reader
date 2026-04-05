@@ -1,10 +1,10 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import sensor
+from esphome.components import sensor, victron_ble
 from esphome.const import CONF_ID, CONF_MAC_ADDRESS, CONF_UPDATE_INTERVAL
 
 victron_ns = cg.esphome_ns.namespace("victron_register_reader")
-VictronRegisterReader = victron_ns.class_("VictronRegisterReader", cg.PollingComponent, sensor.Sensor)
+VictronRegisterReader = victron_ns.class_("VictronRegisterReader", cg.PollingComponent, sensor.Sensor, victron_ble.VictronBLEListener)
 
 CONF_REGISTER = "register"
 
@@ -18,7 +18,7 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend(
 )
 
 async def to_code(config):
-    mac_str = str(config[CONF_MAC_ADDRESS])  # <-- FIX
+    mac_str = str(config[CONF_MAC_ADDRESS])
     reg = config[CONF_REGISTER]
     interval = config[CONF_UPDATE_INTERVAL]
 
@@ -31,5 +31,8 @@ async def to_code(config):
 
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
+
+    # BLE Listener registrieren
+    victron_ble.register_victron_ble_listener(var)
 
 
