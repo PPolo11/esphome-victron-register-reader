@@ -18,14 +18,18 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend(
 )
 
 async def to_code(config):
-    mac_str = config[CONF_MAC_ADDRESS].as_string()
+    mac_str = str(config[CONF_MAC_ADDRESS])  # <-- FIX
+    reg = config[CONF_REGISTER]
+    interval = config[CONF_UPDATE_INTERVAL]
+
     var = cg.new_Pvariable(
         config[CONF_ID],
         mac_str,
-        config[CONF_REGISTER],
-        config[CONF_UPDATE_INTERVAL]
+        reg,
+        interval
     )
 
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
+
 
